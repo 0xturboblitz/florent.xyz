@@ -5,11 +5,12 @@ import { visit } from 'unist-util-visit';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Configure `pageExtensions`` to include MDX files
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  // Optionally, add any other Next.js config below
+  output: "export",
   basePath: '/0xturboblitz.github.io',
-  assetPrefix: '/0xturboblitz.github.io/',
+  images: {
+    unoptimized: true,
+  },
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
 }
 
 function addTargetToLinks() {
