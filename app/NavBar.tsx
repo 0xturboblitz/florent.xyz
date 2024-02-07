@@ -68,7 +68,7 @@ export const NavBar = () => {
       <nav>
         <div className="flex gap-4">
           <NavLink href="/">About</NavLink>
-          <NavLink href="/posts">Posts</NavLink>
+          <NavLink href="/posts">Blog</NavLink>
         </div>
       </nav>
     </div>

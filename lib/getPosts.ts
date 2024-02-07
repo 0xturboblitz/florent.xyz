@@ -6,6 +6,7 @@ export interface Post {
   title: string;
   description: string;
   slug: string;
+  date: string;
 }
 
 export const getPosts = cache(async (): Promise<Post[]> => {
@@ -35,6 +36,7 @@ export const getPosts = cache(async (): Promise<Post[]> => {
         title: metadata.title,
         description: metadata.description,
         slug: dir,
+        date: metadata.date,
       };
     })
   );
