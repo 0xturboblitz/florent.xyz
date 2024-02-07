@@ -5,11 +5,6 @@ import { visit } from 'unist-util-visit';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  basePath: '/0xturboblitz.github.io',
-  images: {
-    unoptimized: true,
-  },
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
 }
 
