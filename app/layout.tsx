@@ -5,11 +5,7 @@ import { NavBar } from "./NavBar";
 import dynamic from 'next/dynamic'
 import React from 'react'
 
-const NoSsr = (props: any) => (
-  <React.Fragment>{props.children}</React.Fragment>
-)
-
-dynamic(() => Promise.resolve(NoSsr), {
+const NoSsr = dynamic(() => Promise.resolve(({ children }: { children: React.ReactNode }) => <>{children}</>), {
   ssr: false
 })
 

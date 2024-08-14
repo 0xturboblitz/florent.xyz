@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+mjx-container[jax="SVG"][display="true"] {
+  display: flex !important;
+  justify-content: center !important;
+  margin: 2em 0 !important;
+}

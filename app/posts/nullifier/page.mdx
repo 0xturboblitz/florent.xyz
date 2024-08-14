@@ -24,15 +24,11 @@ Note that in the following constructions, we are not trying to hide the fact tha
 
 One approach would be to let applications manage user privacy themselves. Each application would have a server with its own key pair that can sign government attestations so that:
 
-<div style={{"display": "flex", "justify-content": "center"}}>
-    <div>
-        $$
-            \begin{aligned}
-                nullifier &= hash(server.sign(attestation))
-            \end{aligned}
-        $$
-    </div>
-</div>
+$$
+\begin{aligned}
+    nullifier &= hash(server.sign(attestation))
+\end{aligned}
+$$
 
 The flow would be the following:
 
@@ -100,15 +96,11 @@ A growing number of official documents like [new passports](https://hackmd.io/@
 
 Most smart cards are designed to generate their own private key so that it can never leave the chip. If a passport is made this way, the government attests to the public key without ever knowing the private key. In this case, we can construct a privacy preserving nullifier as the hash of a signature of a fixed message.
 
-<div style={{"display": "flex", "justify-content": "center"}}>
-    <div>
-        $$
-            \begin{aligned}
-                nullifier = hash(chip.sign(\text{"NULLIFIER"}))
-            \end{aligned}
-        $$
-    </div>
-</div>
+$$
+\begin{aligned}
+    nullifier = hash(chip.sign(\text{"NULLIFIER"}))
+\end{aligned}
+$$
 
 We can prove in a SNARK that the signing private key is correctly derived from the attestation, but it’s impossible for the government to deanonymize the user without knowing their private key.
 
