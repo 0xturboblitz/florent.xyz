@@ -6,17 +6,17 @@ export const metadata = {
 
 ## Privacy preserving nullifiers for proof of identity applications
 
-_Thanks [Jan](https://github.com/Janmajayamall), [Aayush](https://twitter.com/yush_g), [Yanis](https://twitter.com/yanis_mezn), [Michael](https://mrosenberg.pub/about) and [Maxence](https://www.linkedin.com/in/maxence-guillemain-d-echon) for feedback and discussions._
+_Thanks [Jan](https://github.com/Janmajayamall), [Aayush](https://twitter.com/yush_g), [Yanis](https://twitter.com/yanis_mezn), [Michael](https://mrosenberg.pub/about) and [Maxence](https://www.linkedin.com/in/maxence-guillemain-d-echon) for feedback and discussions._
 
 _Cross-posted from [ethresear.ch](https://ethresear.ch/t/privacy-preserving-nullifiers-for-proof-of-identity-applications/18551)._
 
-A growing number of applications like [Proof of passport](https://github.com/zk-passport/proof-of-passport), [anon-aadhaar](https://github.com/anon-aadhaar/anon-aadhaar) and [zk-email](https://github.com/zkemail/zk-email-verify) use existing infrastructure from institutions to verify identities, respectively electronic passports, India’s Aadhaar system and DKIM registries. As they are based on already existing Public Key Infrastructure, building privacy preserving nullifiers can be quite tricky.
+A growing number of applications like [OpenPassport](https://github.com/zk-passport/openpassport), [anon-aadhaar](https://github.com/anon-aadhaar/anon-aadhaar) and [zk-email](https://github.com/zkemail/zk-email-verify) use existing infrastructure from institutions to verify identities, respectively electronic passports, India’s Aadhaar system and DKIM registries. As they are based on already existing Public Key Infrastructure, building privacy preserving nullifiers can be quite tricky.
 
-We’ll take the example of [Proof of Passport](https://github.com/zk-passport/proof-of-passport), but what is discussed here applies to many other projects. Proof of Passport allows users to scan the NFC chip in their government-issued passport and generate zk proofs showing that they have a valid identity. It can be used for proof of humanity, sybil resistance and selective disclosure of private data like nationality or age.
+We’ll take the example of [OpenPassport](https://github.com/zk-passport/openpassport), but what is discussed here applies to many other projects. OpenPassport allows users to scan the NFC chip in their government-issued passport and generate zk proofs showing that they have a valid identity. It can be used for proof of humanity, sybil resistance and selective disclosure of private data like nationality or age.
 
-We want to build a proof of passport SBT that [displays information the user wants to disclose](https://testnets.opensea.io/fr/assets/goerli/0x64bfeff18335e3cac8cf8f8e37ac921371d9c5aa/0). It shouldn’t let someone mint two SBTs with a single passport.
+We want to build a OpenPassport SBT that [displays information the user wants to disclose](https://testnets.opensea.io/fr/assets/goerli/0x64bfeff18335e3cac8cf8f8e37ac921371d9c5aa/0). It shouldn’t let someone mint two SBTs with a single passport.
 
-Naively, one can think of using the hash of the government’s signature as a nullifier and storing it publicly. It does prevent reusage of a proof, but if the government keeps a database with all signature it has issued, it can link each nullifier with each user’s address. As the [ICAO specifications](https://www.icao.int/publications/pages/publication.aspx?docnum=9303) do not describe whether governments should do it or not, we can assume some governments keep those signatures. Additionally, anyone that gets access to the passport data before or after a mint can store it and deanonymize users. Same problem with zk-email: nullifying an email publicly deanonymizes the user to the mail server that signed the email.
+Naively, one can think of using the hash of the government’s signature as a nullifier and storing it publicly. It does prevent reusage of a proof, but if the government keeps a database with all signature it has issued, it can link each nullifier with each user’s address. As the [ICAO specifications](https://www.icao.int/publications/pages/publication.aspx?docnum=9303) do not describe whether governments should do it or not, we can assume some governments keep those signatures. Additionally, anyone that gets access to the passport data before or after a mint can store it and deanonymize users. Same problem with zk-email: nullifying an email publicly deanonymizes the user to the mail server that signed the email.
 
 Note that in the following constructions, we are not trying to hide the fact that a user minted a SBT from the government. This would be hard to do as the government has the same information as the user, and can just request a new SBT to see if the request is rejected or not. Instead, we’re trying to at least hide the user’s address from the government.
 
@@ -33,7 +33,7 @@ $$
 The flow would be the following:
 
 - The user extracts their government attestation from their passport and sends it to the application’s trusted server
-- The server signs the attestation and hashes the result to get the nullifier. If it has already been included on chain, it refuses the request and responds \{false, ∅\}. If it’s not already included, it responds with \{true, signature\}.
+- The server signs the attestation and hashes the result to get the nullifier. If it has already been included on chain, it refuses the request and responds \{false, ∅\}. If it’s not already included, it responds with \{true, signature\}.
 
 When the user submits the proof on chain, they shows that:
 
@@ -44,7 +44,7 @@ The nullifier is then stored on chain.
 
 The server has to block duplicate requests because if it doesn’t, a government could pose as a user, send an attestation, get back a nullifier and identify the user’s address. Note that the government can still know if a user has minted an SBT, but not their address.
 
-The main drawback here is obvious: the server sees every government attestation, so it can link every user’s attestation to its address. Also, there is a liveliness assumption on the server. This might be sufficient for some applications like a vote that happens only once. It can also be improved by keeping the secret in an SGX. But for long-lasting general purpose applications like the proof of passport SBT, it’s insufficient.
+The main drawback here is obvious: the server sees every government attestation, so it can link every user’s attestation to its address. Also, there is a liveliness assumption on the server. This might be sufficient for some applications like a vote that happens only once. It can also be improved by keeping the secret in an SGX. But for long-lasting general purpose applications like the OpenPassport SBT, it’s insufficient.
 
 ### Using two-party MPC
 
@@ -59,7 +59,7 @@ The circuit takes as inputs:
 - The server’s private key (known only to the server)
 - The government attestation (known only to the user)
 
-Over MPC, the user and the server compute the signature of the attestation, hashe it and compare it with the nullifiers already posted. Just like before, if it’s included the circuit returns \{false, ∅\} and if it’s not included it returns \{true, nullifier\}. The user and the server then generate SNARKs proving they performed the MPC correctly and they can be verified on chain.
+Over MPC, the user and the server compute the signature of the attestation, hashe it and compare it with the nullifiers already posted. Just like before, if it’s included the circuit returns \{false, ∅\} and if it’s not included it returns \{true, nullifier\}. The user and the server then generate SNARKs proving they performed the MPC correctly and they can be verified on chain.
 
 Note that we have to do the whole computation from disclosed attributes to nullifier over MPC and in one proof. If we tried to split it so that only the nullifier generation is done over MPC, the user’s proof would have to disclose the government attestation or something deterministically derived from it, which would allow the government to identify them.
 
@@ -70,29 +70,29 @@ Now, the server can’t link user’s attestations to their addresses. However:
 
 ### Using n-way MPC
 
-If we had something like [iO](https://en.wikipedia.org/wiki/Indistinguishability_obfuscation), we could do an obfuscated inclusion check on chain. This way, if a government tried to provide the same proof as a user, it would be able to know if the SBT was already minted, but not to which address. We can try to emulate this by extending the MPC setup. It also relaxes the liveliness assumption on a single server.
+If we had something like [iO](https://en.wikipedia.org/wiki/Indistinguishability_obfuscation), we could do an obfuscated inclusion check on chain. This way, if a government tried to provide the same proof as a user, it would be able to know if the SBT was already minted, but not to which address. We can try to emulate this by extending the MPC setup. It also relaxes the liveliness assumption on a single server.
 
 A rough flow would be:
 
 - Nodes join a network. This can be done on top of EigenLayer so as to slash nodes that misbehave.
-- The circuit is computed by the user together with the nodes. This time, the server secret is a threshold secret reconstructed from t/N nodes.
+- The circuit is computed by the user together with the nodes. This time, the server secret is a threshold secret reconstructed from t/N nodes.
 
 Again, each participant can prove correct computation using a snark. In particular, nodes show their secret is consistent over time by showing the hash of their secret is always the same. This guarantees the reconstructed secret is always the same, which makes the nullifier generation deterministic.  
 Signing the attestation with a threshold private key can be replaced with hashing it with the threshold secret for convenience.
 
-To avoid putting a large burden on the nodes, it might be possible to adapt the design to something closer to [Octopus](https://ethresear.ch/t/octopus-contract-and-its-applications/17844).
+To avoid putting a large burden on the nodes, it might be possible to adapt the design to something closer to [Octopus](https://ethresear.ch/t/octopus-contract-and-its-applications/17844).
 
 Something very similar can be done with threshold FHE. The main difference is that instead of being part of the setup, the user encrypts the attestation with their FHE private key, makes their evaluation key public, and at the end of the process decrypts the encrypted nullifier before posting it on chain. Depending on the overhead of threshold FHE, this could be lighter for the user, but probably heavier for the nodes.
 
 But this setup raise new issues:
 
-- Leaking secrets is undetectable. A government corrupting t nodes privately could deanonymize every user. It would be possible to slash nodes only if they make their secret public to everybody. We can still have some cryptoeconomic security, but it’s insufficient if we assume governments are willing to forgo tens of millions in slashing rewards.
+- Leaking secrets is undetectable. A government corrupting t nodes privately could deanonymize every user. It would be possible to slash nodes only if they make their secret public to everybody. We can still have some cryptoeconomic security, but it’s insufficient if we assume governments are willing to forgo tens of millions in slashing rewards.
 - There must be a way for nodes to rotate, so secrets need some way to be shared or at least added and removed.
 - After some turnover, there will be a point at which nodes that stopped restaking or taking part in the computation can collude at no cost and deanonymize everyone.
 
 ### Using embedded private keys
 
-A growing number of official documents like [new passports](https://hackmd.io/@TCEn_IDhTDWLjwyItiiBcQ/BJ4LX0m9p), [most of EU’s ID cards](https://www.inverid.com/blog/European-Identity-cards) and Japanese [Myna Cards](https://github.com/MynaWallet) not only contain a signed attestation from the issuing authority, but also their own public-private key pair. Authentication is done dynamically by asking the chip to sign a message. This is called active authentication, as opposed to passive authentication. It prevents cloning by simply copying the attestation on a forged document.
+A growing number of official documents like [new passports](https://hackmd.io/@TCEn_IDhTDWLjwyItiiBcQ/BJ4LX0m9p), [most of EU’s ID cards](https://www.inverid.com/blog/European-Identity-cards) and Japanese [Myna Cards](https://github.com/MynaWallet) not only contain a signed attestation from the issuing authority, but also their own public-private key pair. Authentication is done dynamically by asking the chip to sign a message. This is called active authentication, as opposed to passive authentication. It prevents cloning by simply copying the attestation on a forged document.
 
 Most smart cards are designed to generate their own private key so that it can never leave the chip. If a passport is made this way, the government attests to the public key without ever knowing the private key. In this case, we can construct a privacy preserving nullifier as the hash of a signature of a fixed message.
 
