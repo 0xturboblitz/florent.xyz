@@ -25,7 +25,6 @@ export const getPosts = cache(async (): Promise<Post[]> => {
   const dirs = (await Promise.all(checkDirPromises)).filter(
     (dir): dir is string => dir !== null
   );
-  console.log({ dirs });
 
   return Promise.all(
     dirs.map(async (dir): Promise<Post> => {
