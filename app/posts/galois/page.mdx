@@ -1,0 +1,241 @@
+export const metadata = {
+    title: 'A friendly primer on Galois theory',
+    description: 'Hi',
+    date: 'Aug 25, 2024',
+}
+
+## A friendly primer on Galois theory
+
+You probably learned in highschool there is a nice formula that gives the roots of any degree 2 polynomial. If you define your polynomial as $ax^2+bx+c$, the roots look like this:
+
+$$
+x_{1, 2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
+Pretty cool. Can we do this for higher degree polynomials?
+
+We can for degrees 3 and 4. The formulas look a bit more convoluted. For a degree 3 polynomial $ax^3+bx^2+cx+d$, the roots look like this:
+
+$$
+\left.
+\begin{aligned}
+x_1 &= S + T - \frac{b}{3a} \\
+x_2 &= -\frac{S + T}{2} - \frac{b}{3a} + \frac{i\sqrt{3}}{2} (S - T) \\
+x_3 &= -\frac{S + T}{2} - \frac{b}{3a} - \frac{i\sqrt{3}}{2} (S - T)
+\end{aligned}
+\ \right| \quad
+\begin{aligned}
+S &= \sqrt[3]{R + \sqrt{Q^3 + R^2}} \\
+T &= \sqrt[3]{R - \sqrt{Q^3 + R^2}} \\
+Q &= \frac{3ac - b^2}{9a^2} \\
+R &= \frac{9abc - 27a^2d - 2b^3}{54a^3}
+\end{aligned}
+$$
+
+I won't bother writing out the solutions for degree 4 here. Believe me, they look fancy.
+
+Can we do this for polynomials of any degrees? It turns out we can't. There is no algebraic solution to general polynomial equations of degree five or higher. What?! Why does it stop at five, all of a sudden?
+
+Let's introduce a few tools from Galois theory.
+
+### Field extensions
+
+From now on, we'll think about our polynomials in $\mathbb{Q}$, also called rational numbers. $\mathbb{Q}$ contains all the numbers you can build using integers the basic operations of addition, substraction, multiplication and division, but without being able to take roots.
+
+Let's consider $x^2 - 2$, which has roots $x_1 = \sqrt{2}$ and $x_2 = -\sqrt{2}$. These are not in $\mathbb{Q}$. We need to extend our field to $\mathbb{Q}(\sqrt{2})$ to be able to talk about them. This is called a field extension.
+
+You probably have already encountered a field extension: complex numbers. Complex numbers arise by deciding that actually, the polynomial $x^2 + 1$ has roots, and we can extend $\mathbb{R}$ to $\mathbb{C}$ to be able to talk about them. This is very useful as it allows us to state nice theorems like the Fundamental Theorem of Algebra: every polynomial of degree $n$ has $n$ roots in $\mathbb{C}$, taking into account multiplicity.
+
+Our new field $\mathbb{Q}(\sqrt{2})$ contains all numbers of the form $a + b\sqrt{2}$, where $a$ and $b$ are rational numbers. We can add, subtract, multiply and divide these numbers, and the result still belongs to $\mathbb{Q}(\sqrt{2})$.
+
+You might have noticed something: from the point of view of $\mathbb{Q}$, the choice of sign of our roots $\sqrt{2}$ and $-\sqrt{2}$ is somewhat arbitrary. This is because $(\sqrt{2})^2 = (-\sqrt{2})^2 = 2$, so whether you choose $\sqrt{2}$ or $-\sqrt{2}$ to be the canonical square root of 2 makes little difference.
+
+To see why, we can build algebraic expressions in $\mathbb{Q}$ involving our roots, and then try swapping them around. For instance, swapping roots in $x_1x_2 = 2$ yields $x_2x_1 = 2$, another true expression. In fact, *any* algebraic expression involving our roots will remain true when we swap them around.
+
+Note that expressions such as $x_1 - x_2 = 2\sqrt{2}$ do not remain true when we swap the roots around, but we don't consider them here because their coefficients are not in $\mathbb{Q}$. We want to keep all coefficients in $\mathbb{Q}$ to understand what $\mathbb{Q}$ "thinks" about those new elements $\sqrt{2}$ and $-\sqrt{2}$.
+
+Here we have a first example of a Galois group. We say that the Galois group of $x^2 - 2$ over $\mathbb{Q}$ is $\mathbb{S}_2$, because there are two elements in the group: the identity, and the element that swaps the roots around. We can represent this group as follows:
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <img src="/S2.png" style={{ maxWidth: '40%' }} />
+</div>
+
+If you've never encountered groups before, you can think about them as the possible ways you can rearrange elements of a set. In our case, each element of a group represents a possible permutation of the roots of our polynomial.
+
+### A higher degree example
+
+Can we always swap around the roots of a polynomial? Let's try another one.
+
+Consider $x^{4}-10x^{2}+1$. Factoring gives us $(x^{2}-2x{\sqrt{2}}-1)(x^{2}+2x{\sqrt{2}}-1)$, which yields roots:
+
+$$
+\begin{aligned}
+x_1&={\sqrt {2}}+{\sqrt {3}},\\
+x_2&={\sqrt {2}}-{\sqrt {3}},\\
+x_3&=-{\sqrt {2}}+{\sqrt {3}},\\
+x_4&=-{\sqrt {2}}-{\sqrt {3}}.
+\end{aligned}
+$$
+
+We can try to build expressions in $\mathbb{Q}$ and swap around the roots. For instance, I can swap $x_1$ and $x_2$ in $x_1x_2 = -1$, but I would also have to swap $x_3$ and $x_4$, otherwise I would break $x_2x_4$ = 1.
+
+In total, we find 4 possible permutations that preserve all algebraic expressions:
+
+$$
+\begin{align*}
+\text{Identity:} & \quad (x_1, x_2, x_3, x_4) \mapsto (x_1, x_2, x_3, x_4) \\
+\text{Sign change of } \sqrt{3}: & \quad (x_1, x_2, x_3, x_4) \mapsto (x_2, x_1, x_4, x_3) \\
+\text{Sign change of } \sqrt{2}: & \quad (x_1, x_2, x_3, x_4) \mapsto (x_3, x_4, x_1, x_2) \\
+\text{Sign change of both } \sqrt{2} \text{ and } \sqrt{3}: & \quad (x_1, x_2, x_3, x_4) \mapsto (x_4, x_3, x_2, x_1)
+\end{align*}
+$$
+
+So not all the possible permutations of the roots are allowed here: out of the $4! = 24$ possible permutations of 4 elements, only 4 are allowed.
+
+We can represent this group like this:
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <img src="/V4.png" style={{ maxWidth: '50%' }} />
+</div>
+
+This group has a name: it's called the Klein four-group, denoted $\mathbb{V}_4$. It's also the symmetry group of a rectangle: you can flip it around its horizontal or vertical axis, or rotate it by 180 degrees. To make the link apparent, you can see the roots as vertices of the rectangles and the sign changes as symmetries.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <img src="/rectangle.png" style={{ maxWidth: '50%' }} />
+</div>
+
+Polynomials of the same degree can yield different Galois groups: trying with $x^4-2$ yields roots $x_{1,2} =\pm \sqrt[4]{2}$ and $x_{3,4} =\pm i\sqrt[4]{2}$, which gives Galois group $\mathbb{D}_8$. Those are the symmetries of a square, they have more structure than $\mathbb{V}_4$.
+
+Something is happening here. We were looking at purely algebraic expressions, and all of a sudden groups come up.
+
+### The Galois correspondence
+
+Remember the four roots of our polynomial $x^4-10x^2+1$. We could write them as $x_{1,2,3,4} = \pm \sqrt {2} \pm \sqrt {3}$. To build them, we need to extend $\mathbb{Q}$ twice: first to $\mathbb{Q}(\sqrt{2})$, then to $\mathbb{Q}(\sqrt{2}, \sqrt{3})$. Or the other way around. Let's draw the field extensions as a tower:
+
+$$
+\begin{array}{c}
+\mathbb{Q}(\sqrt{2}, \sqrt{3}) \\
+/ \quad \backslash \\
+\mathbb{Q}(\sqrt{2}) \quad \mathbb{Q}(\sqrt{3}) \\
+\backslash \quad / \\
+\mathbb{Q}
+\end{array}
+$$
+
+This tower goes from our base field $\mathbb{Q}$ to the field containing all our roots $\mathbb{Q}(\sqrt{2}, \sqrt{3})$. This field is called the *splitting field* of our polynomial.
+
+In the intermediate fields $\mathbb{Q}(\sqrt{2})$ and $\mathbb{Q}(\sqrt{3})$, we can do the same experiment as before and try swapping the roots around. Because they now contain $\sqrt{2}$ or $\sqrt{3}$, new expressions are allowed, so we will have less possible permutations of the roots. For instance, in $\mathbb{Q}(\sqrt{2})$, I can now build $x_1 + x_2 = 2\sqrt{2}$, which breaks two of the possible permutations. The intuition behind this is that every time we adjoin a root to the field, it's now "fixed", so the only permutations possible are those that preserve it. We can continue up the tower until we get to the splitting field, in which only the identity permutation is allowed.
+
+Let's draw the groups as a tower too:
+
+$$
+\begin{array}{c}
+\set{e} \\
+/ \quad \backslash \\
+\mathbb{S}_2 \quad \mathbb{S}_2 \\
+\backslash \quad / \\
+\mathbb{V}_4
+\end{array}
+$$
+
+You might guess were this is going. Let's introduce a last concept: the degree of a field extension. Intuitively, it represents how much adding a new element raises the dimensionality of the field. The degree of $\mathbb{Q}(\sqrt{2})$ over $\mathbb{Q}$ is 2, because we're adding one new dimension to our number line, just like how adding $i$ to $\mathbb{R}$ yields the complex plane.
+
+Similarly, the degree of $\mathbb{Q}(\sqrt[4]{2})$ over $\mathbb{Q}$ is 4, because we need to take the square root of 2 first, to get $\sqrt{2}$, and then the square root of that, to get $\sqrt[4]{2}$.
+
+Let's draw our towers side by side:
+
+$$
+\begin{array}{cc}
+\begin{array}{c}
+\mathbb{Q}(\sqrt{2}, \sqrt{3}) \\
+/ \quad \backslash \\
+\mathbb{Q}(\sqrt{2}) \quad \mathbb{Q}(\sqrt{3}) \\
+\backslash \quad / \\
+\mathbb{Q}
+\end{array}
+&
+\qquad\qquad
+&
+\begin{array}{c}
+\set{e} \\
+/ \quad \backslash \\
+\mathbb{S}_2 \quad \mathbb{S}_2 \\
+\backslash \quad / \\
+\mathbb{V}_4
+\end{array}
+\end{array}
+$$
+
+This correspondence illustrates the Fundamental theorem of Galois theory. Essentially, it states that there is a one-to-one correspondence between the intermediate fields of a field extension and the subgroups of the Galois group of the extension. It goes further and states that the degree of the extension is equal to the order (=number of elements) of the subgroup.
+
+Let's draw the same diagram for our earlier example of $x^4-2$, which had roots $x_{1,2} =\pm \sqrt[4]{2}$ and $x_{3,4} =\pm i\sqrt[4]{2}$. This time, we'll show more possible intermediate fields that get us to our splitting field, and the corresponding subgroups.
+
+$$
+\begin{array}{cc}
+\begin{array}{c}
+\mathbb{Q}(\sqrt[4]{2}, i) \\
+\diagup \hspace{2em} | \hspace{2em} \diagdown \\
+\mathbb{Q}(\sqrt[4]{2}, \sqrt{2}) \quad \mathbb{Q}(i, \sqrt{2})  \quad \mathbb{Q}(i\sqrt{2}, \sqrt{2}) \\
+\diagdown \hspace{1em} \diagup \hspace{2em} | \hspace{2em} \diagdown \hspace{1em} \diagup \\
+\mathbb{Q}(\sqrt{2}) \quad \mathbb{Q}(i)  \quad \mathbb{Q}(i\sqrt{2}) \\
+\diagdown \hspace{1em} | \hspace{1em} \diagup \\
+\mathbb{Q}
+\end{array}
+&
+\qquad\qquad
+&
+\begin{array}{c}
+\{e\} \\
+\diagup \hspace{1em} | \hspace{1em} \diagdown \\
+\mathbb{Z}_2 \qquad \mathbb{Z}_2 \qquad \mathbb{Z}_2 \\
+\diagdown \hspace{0.5em} \diagup \hspace{1em} | \hspace{1em} \diagdown \hspace{0.5em} \diagup \\
+V_4 \quad \mathbb{Z}_4 \quad V_4 \\
+\diagdown \hspace{1em} | \hspace{1em} \diagup \\
+D_8
+\end{array}
+\end{array}
+$$
+
+This correspondence is nice because it allows us to translate questions about fields, which are infinite and behave like high-dimensional vector spaces, into questions about groups, which are discrete and easy to manipulate.
+
+### The unsolvability of the quintic
+
+We're now ready to get an intuition of why the quintic is unsolvable. A polynomial of degree $n$ has at most $n$ roots, so its Galois group is a subgroup of $\mathbb{S}_n$, the group that contains all the possible permutations of $n$ elements. In the worst case, it's $\mathbb{S}_n$ itself.
+
+To find an algebraic expression of our solutions, we need to build a tower of extensions that goes from our base field $\mathbb{Q}$ to our splitting field $\mathbb{Q}(x_1, x_2, \ldots, x_n)$ that contains all of our roots. Each step in this tower corresponds to taking radical (nth root) of some expression we built previously.
+
+By the Galois correspondence, this implies that a corresponding tower of groups exists from our Galois group to the trivial group. In particular, each subgroup needs to be a normal subgroup of the previous, and the quotient subgroup at each step must be abelian. Those are nice properties we need to make sure that, in the field extension world, we can build our roots using finitely nested radicals.
+
+A Galois group that has those properties is called *solvable*.
+
+$$
+\mathbb{S}_2 \xrightarrow{2} \{e\} \\
+$$
+
+For polynomials of degree 2, the largest possible Galois group is $\mathbb{S}_2$, which can always be broken down trivially to $\set{e}$.
+
+$$
+\mathbb{S}_3 \xrightarrow{3} \mathbb{Z}_3 \xrightarrow{2} \{e\} \\
+$$
+
+$$
+\mathbb{S}_4 \xrightarrow{2} \mathbb{A}_4 \xrightarrow{3} \mathbb{V}_4 \xrightarrow{2} \mathbb{Z}_2 \xrightarrow{2} \{e\}
+$$
+
+For $\mathbb{S}_3$ and $\mathbb{S}_4$, such decompositions also exist, going through alternating groups, cyclic groups and products of cyclic groups. The numbers on the arrows indicates indices, which are the number of elements in the quotient group, or the number of times the smaller group "fits" in the larger one.
+
+$$
+\mathbb{S}_5 \xrightarrow{2} \mathbb{A}_5 \xrightarrow{60} \{e\} \\
+$$
+
+$$
+\mathbb{S}_6 \xrightarrow{2} \mathbb{A}_6 \xrightarrow{360} \{e\} \\
+$$
+
+For $\mathbb{S}_5$, things start getting worrisome. We can break $\mathbb{S}_5$ down to $\mathbb{A}_5$, the alternating group on 5 elements. It has order 60 and contains all the permutations of $\mathbb{S}_5$ that have an even number of transpositions of 2 elements. But then, we get stuck: $\mathbb{A}_5$ is simple, meaning it has no nontrivial normal subgroups. If you take any permutation in $\mathbb{A}_5$ and try to conjugate it with any other, you will find you cannot build a subgroup that is normal without getting the whole group. This implies that $\mathbb{A}_5$ is not solvable, and therefore $\mathbb{S}_5$ is not solvable either. For higher degrees, things don't get better.
+
+This gets us to the Abel-Ruffini theorem: there is no general solution in radicals to polynomial equations of degree five or higher. The simplest polynomial that illustrates this is $x^5 - x - 1$, which has Galois group is $\mathbb{S}_5$, so I can't write its roots here in a nice way.
+
+### Conclusion
+
+Galois theory draws a nice link between algebra and group theory. It also provides explanations for a bunch of other things, like constructibility of polygons with ruler and compass, which are easy to find online. I hope this primer piqued your curiosity and now you want to learn more about it.
