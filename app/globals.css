@@ -14,3 +14,9 @@ mjx-container[jax="SVG"]:not([display="true"]) {
   display: inline-flex !important;
   vertical-align: -0.1em;
 }
+
+.bookPage ul {
+  padding-left: 1rem;
+  list-style-type: disc;
+  color: black;
+}
