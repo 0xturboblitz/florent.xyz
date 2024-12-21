@@ -6,9 +6,6 @@ import { visit } from 'unist-util-visit';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
-  env: {
-    BOOKS: process.env.BOOKS,
-  },
 }
 
 function addTargetToLinks() {
