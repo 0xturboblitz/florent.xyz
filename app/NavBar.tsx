@@ -62,6 +62,7 @@ export const NavBar = () => {
             href="https://www.instagram.com/florent_tavernier/"
             icon={faInstagram}
           />
+          <SocialIcon href="https://curius.app/florent-tavernier" icon={faChevronCircleUp} />
           <SocialIcon href="mailto:florent.tavernier@gmail.com" icon={faEnvelope} />
         </div>
       </div>
